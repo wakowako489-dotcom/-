@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Ultimate X - Все Видео Мира</title>
+    <title>YouTube Ultimate X - Анимированная версия</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -21,10 +21,11 @@
             padding: 0 16px; z-index: 100; border-bottom: 1px solid #e5e5e5;
         }
         .header-left { display: flex; align-items: center; gap: 16px; }
-        .menu-icon { cursor: pointer; padding: 8px; border-radius: 50%; user-select: none; }
+        .menu-icon { cursor: pointer; padding: 8px; border-radius: 50%; user-select: none; transition: background-color 0.2s ease; }
         .menu-icon:hover { background-color: #e5e5e5; }
         .logo { display: flex; align-items: center; gap: 4px; cursor: pointer; text-decoration: none; color: inherit; }
-        .logo-icon { color: #ff0000; font-size: 30px !important; }
+        .logo-icon { color: #ff0000; font-size: 30px !important; transition: transform 0.3s ease; }
+        .logo:hover .logo-icon { transform: scale(1.1); }
         .logo span { font-weight: 700; font-size: 20px; letter-spacing: -0.5px; }
 
         .header-center { display: flex; align-items: center; flex: 0 1 728px; gap: 16px; }
@@ -32,11 +33,14 @@
         .search-input {
             width: 100%; height: 40px; padding: 0 16px; font-size: 16px;
             border: 1px solid #ccc; border-right: none; border-radius: 40px 0 0 40px; outline: none;
+            transition: border-color 0.2s ease;
         }
+        .search-input:focus { border-color: #1c62b9; }
         .search-btn {
             width: 64px; height: 40px; background-color: #f8f8f8;
             border: 1px solid #ccc; border-radius: 0 40px 40px 0;
             cursor: pointer; display: flex; justify-content: center; align-items: center;
+            transition: background-color 0.2s ease;
         }
         .search-btn:hover { background-color: #f0f0f0; }
 
@@ -46,54 +50,61 @@
             background-color: transparent; border: 1px solid #1c62b9; color: #1c62b9;
             padding: 8px 14px; border-radius: 20px; font-size: 14px; font-weight: 500;
             cursor: pointer; display: flex; align-items: center; gap: 6px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
         }
         .auth-btn:hover { background-color: rgba(28, 98, 185, 0.1); }
+        .auth-btn:active { transform: scale(0.95); }
 
         .role-badge {
             color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px;
             font-weight: bold; user-select: none; display: none;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .role-badge.user { background-color: #1c62b9; }
         .role-badge.admin { background-color: #cc0000; }
         
-        .icon-btn { background: none; border: none; padding: 8px; border-radius: 50%; cursor: pointer; }
+        .icon-btn { background: none; border: none; padding: 8px; border-radius: 50%; cursor: pointer; transition: background-color 0.2s ease; }
         .icon-btn:hover { background-color: #e5e5e5; }
 
         .profile-pic {
             width: 34px; height: 34px; border-radius: 50%; background-color: #606060;
             color: white; display: none; justify-content: center; align-items: center;
             font-weight: bold; cursor: pointer; user-select: none; font-size: 14px;
+            transition: transform 0.2s ease;
         }
+        .profile-pic:hover { transform: scale(1.05); }
 
         /* --- САЙДБАР --- */
         .main-container { display: flex; margin-top: 56px; }
         aside {
             width: 240px; height: calc(100vh - 56px); position: fixed;
             top: 56px; left: 0; background-color: #ffffff; padding: 12px 0;
-            overflow-y: auto; transition: width 0.15s ease-in-out; z-index: 90;
+            overflow-y: auto; transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 90;
         }
         body.sidebar-collapsed aside { width: 72px; }
         .sidebar-item {
             display: flex; align-items: center; gap: 24px; padding: 0 24px;
             height: 40px; cursor: pointer; text-decoration: none; color: #0f0f0f;
+            transition: background-color 0.2s ease, border-radius 0.2s ease, padding 0.3s ease;
         }
         body.sidebar-collapsed .sidebar-item { flex-direction: column; justify-content: center; gap: 4px; padding: 0; height: 72px; }
         .sidebar-item:hover, .sidebar-item.active { background-color: #f2f2f2; border-radius: 10px; margin: 0 8px; }
-        .sidebar-item span { font-size: 14px; white-space: nowrap; }
+        .sidebar-item span { font-size: 14px; white-space: nowrap; transition: opacity 0.2s ease; }
         body.sidebar-collapsed .sidebar-item span { font-size: 10px; }
         hr { border: none; border-top: 1px solid #e5e5e5; margin: 12px 0; }
         body.sidebar-collapsed hr { display: none; }
 
         main {
             margin-left: 240px; flex: 1; padding: 24px;
-            background-color: #ffffff; transition: margin-left 0.15s ease-in-out;
+            background-color: #ffffff; transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         body.sidebar-collapsed main { margin-left: 72px; }
 
         /* --- ТЕГИ / КАТЕГОРИИ --- */
         .tags-container { display: flex; gap: 12px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px; }
         .tags-container::-webkit-scrollbar { height: 0px; }
-        .tag { background-color: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+        .tag { background-color: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background-color 0.2s ease, color 0.2s ease; }
+        .tag:hover { background-color: rgba(0,0,0,0.1); }
         .tag.active { background-color: #0f0f0f; color: white; }
 
         /* --- СЕТКА ВИДЕО КАРТОЧЕК --- */
@@ -101,75 +112,131 @@
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             column-gap: 16px; row-gap: 40px;
         }
-        .video-card { cursor: pointer; display: flex; flex-direction: column; gap: 12px; }
+        .video-card { cursor: pointer; display: flex; flex-direction: column; gap: 12px; opacity: 0; animation: fadeInCard 0.4s ease forwards; }
+        
+        /* Плавная задержка появления для эффекта каскада */
+        .video-card:nth-child(1) { animation-delay: 0.05s; }
+        .video-card:nth-child(2) { animation-delay: 0.1s; }
+        .video-card:nth-child(3) { animation-delay: 0.15s; }
+        .video-card:nth-child(4) { animation-delay: 0.2s; }
+        .video-card:nth-child(5) { animation-delay: 0.25s; }
+        .video-card:nth-child(6) { animation-delay: 0.3s; }
+
         .thumbnail-container {
             position: relative; width: 100%; padding-top: 56.25%;
             border-radius: 12px; overflow: hidden; background-color: #e5e5e5;
+            transition: border-radius 0.3s ease;
         }
-        .thumbnail-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        .thumbnail-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s cubic-bezier(0.1, 0.8, 0.3, 1); }
+        .video-card:hover .thumbnail-container img { transform: scale(1.05); }
+        .video-card:hover .thumbnail-container { border-radius: 4px; }
+        
         .duration {
             position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.8);
             color: white; padding: 3px 4px; font-size: 12px; font-weight: 500; border-radius: 4px;
+            transition: opacity 0.2s ease;
         }
         .video-info { display: flex; gap: 12px; }
-        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; flex-shrink: 0; }
+        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; flex-shrink: 0; transition: transform 0.2s ease; }
+        .video-card:hover .channel-avatar { transform: scale(1.05); }
         .video-text { display: flex; flex-direction: column; gap: 4px; }
         .video-title { font-size: 14px; font-weight: 500; line-height: 20px; color: #0f0f0f; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .channel-name { font-size: 12px; color: #606060; }
         .video-metadata { font-size: 12px; color: #606060; }
 
         /* --- СТРАНИЦА ПРОСМОТРА --- */
-        #watchPage { display: none; gap: 24px; padding-top: 12px; }
+        #watchPage { display: none; gap: 24px; padding-top: 12px; animation: fadeInPage 0.4s ease; }
         .player-container { flex: 1; max-width: 850px; }
-        .yt-wrapper { width: 100%; aspect-ratio: 16/9; background-color: #000; border-radius: 12px; overflow: hidden; }
+        .yt-wrapper { width: 100%; aspect-ratio: 16/9; background-color: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
         #ytPlayer { width: 100%; height: 100%; border: none; }
 
         .watch-title { font-size: 20px; font-weight: 700; margin: 16px 0 8px 0; }
         .watch-details { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #e5e5e5; margin-bottom: 16px; }
         .watch-channel { display: flex; align-items: center; gap: 12px; }
-        .subscribe-btn { background-color: #0f0f0f; color: white; border: none; padding: 0 16px; height: 36px; border-radius: 18px; font-weight: 500; cursor: pointer; }
+        .subscribe-btn { background-color: #0f0f0f; color: white; border: none; padding: 0 16px; height: 36px; border-radius: 18px; font-weight: 500; cursor: pointer; transition: background-color 0.2s ease, transform 0.1s ease; }
+        .subscribe-btn:hover { background-color: #272727; }
+        .subscribe-btn:active { transform: scale(0.95); }
         .subscribe-btn.subbed { background-color: #f2f2f2; color: #0f0f0f; }
+        .subscribe-btn.subbed:hover { background-color: #e5e5e5; }
 
         .actions-bar { display: flex; gap: 8px; align-items: center; }
         .like-dislike-group { display: flex; background-color: #f2f2f2; border-radius: 18px; overflow: hidden; }
-        .action-btn { background: none; border: none; display: flex; align-items: center; gap: 6px; padding: 0 16px; height: 36px; cursor: pointer; font-size: 14px; font-weight: 500; user-select: none; }
+        .action-btn { background: none; border: none; display: flex; align-items: center; gap: 6px; padding: 0 16px; height: 36px; cursor: pointer; font-size: 14px; font-weight: 500; user-select: none; transition: background-color 0.2s ease, color 0.2s ease; }
         .action-btn:hover { background-color: #e5e5e5; }
-        .action-btn.active { color: #ff0000; }
+        .action-btn.active { color: #ff0000; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         /* --- КОММЕНТАРИИ --- */
         .comments-section { margin-top: 24px; }
         .comments-count { font-size: 16px; font-weight: bold; margin-bottom: 16px; }
         .comment-input-block { display: flex; gap: 12px; margin-bottom: 24px; }
         .comment-input-container { flex: 1; }
-        .comment-field { width: 100%; border: none; border-bottom: 1px solid #ccc; padding: 8px 0; outline: none; font-size: 14px; background: transparent; }
+        .comment-field { width: 100%; border: none; border-bottom: 1px solid #ccc; padding: 8px 0; outline: none; font-size: 14px; background: transparent; transition: border-color 0.2s ease; }
         .comment-field:focus { border-bottom: 2px solid #0f0f0f; }
-        .comment-btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 8px; display: none; }
-        .comment-btn { border: none; padding: 8px 16px; border-radius: 18px; cursor: pointer; font-weight: 500; font-size: 14px; }
+        
+        .comment-btns { display: none; justify-content: flex-end; gap: 8px; margin-top: 8px; animation: slideDown 0.2s ease; }
+        .comment-btn { border: none; padding: 8px 16px; border-radius: 18px; cursor: pointer; font-weight: 500; font-size: 14px; transition: background-color 0.2s ease; }
         .comment-btn.submit { background-color: #0f0f0f; color: white; }
+        .comment-btn.submit:hover { background-color: #272727; }
 
         .comments-list { display: flex; flex-direction: column; gap: 16px; }
-        .comment-item { display: flex; gap: 12px; }
+        .comment-item { display: flex; gap: 12px; animation: fadeInCard 0.3s ease forwards; }
         .comment-author { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
         .comment-text { font-size: 14px; color: #0f0f0f; line-height: 20px; }
 
-        /* --- МОДАЛКИ (ВХОД И АДМИНКА) --- */
+        /* --- МОДАЛКИ И СНЭКБАРЫ --- */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.5); z-index: 150; justify-content: center; align-items: center;
+            backdrop-filter: blur(4px); transition: all 0.3s ease;
         }
-        .modal-content { background-color: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; }
-        .close-modal { position: absolute; top: 16px; right: 16px; cursor: pointer; user-select: none; }
+        .modal-content { 
+            background-color: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; 
+            animation: modalScaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .close-modal { position: absolute; top: 16px; right: 16px; cursor: pointer; user-select: none; transition: transform 0.2s ease; }
+        .close-modal:hover { transform: rotate(90deg); }
         .modal h3 { margin-bottom: 16px; }
-        .modal input, .modal select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; outline: none; font-size: 14px; background: white;}
-        .modal button { background-color: #0f0f0f; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 14px; }
+        .modal input, .modal select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; outline: none; font-size: 14px; background: white; }
+        .modal button { background-color: #0f0f0f; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 14px; transition: background-color 0.2s ease; }
+        .modal button:hover { background-color: #272727; }
 
         .snackbar {
             visibility: hidden; min-width: 280px; background-color: #212121; color: #fff;
-            border-radius: 4px; padding: 14px 24px; position: fixed; z-index: 200; left: 24px; bottom: 24px; font-size: 14px;
+            border-radius: 8px; padding: 14px 24px; position: fixed; z-index: 200; left: 24px; bottom: 24px; font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .snackbar.show { visibility: visible; animation: fadeIn 0.3s, fadeOut 0.3s 2.7s; }
-        @keyframes fadeIn { from { bottom: 0; opacity: 0; } to { bottom: 24px; opacity: 1; } }
-        @keyframes fadeOut { from { bottom: 24px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+        .snackbar.show { visibility: visible; animation: fadeInToast 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOutToast 0.3s 2.7s forwards; }
+
+        /* --- КЛЮЧЕВЫЕ КАДРЫ АНИМАЦИЙ (KEYWORDS) --- */
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInPage {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes modalScaleUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            80% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes fadeInToast {
+            from { bottom: 0; opacity: 0; transform: scale(0.9); }
+            to { bottom: 24px; opacity: 1; transform: scale(1); }
+        }
+        @keyframes fadeOutToast {
+            from { bottom: 24px; opacity: 1; transform: scale(1); }
+            to { bottom: 0; opacity: 0; transform: scale(0.9); }
+        }
     </style>
 </head>
 <body>
@@ -185,7 +252,7 @@
 
         <div class="header-center">
             <form class="search-form" id="searchForm" onsubmit="event.preventDefault(); executeSearch();">
-                <input type="text" id="searchInput" class="search-input" placeholder="Введите имя любого блогера или любое слово для генерации видео...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Введите имя любого блогера для плавной генерации...">
                 <button type="submit" class="search-btn">
                     <i class="material-icons">search</i>
                 </button>
@@ -194,7 +261,6 @@
 
         <div class="header-right">
             <button class="auth-btn" id="authBtn"><i class="material-icons">account_circle</i>Войти</button>
-            
             <div class="role-badge" id="userRoleBadge">Роль</div>
             <button class="icon-btn" id="addVideoBtn" style="display: none;" title="Добавить по ID (Админ)"><i class="material-icons">video_call</i></button>
             <div class="profile-pic" id="headerProfilePic">U</div>
@@ -302,14 +368,11 @@
     <script src="https://www.youtube.com/player_api"></script>
 
     <script>
-        // Базовый глобальный пул ID реальных крутых видео (для генератора)
         const RealYTPool = [
             "eO_N8g0t7Z8", "M6u0Yen9_sc", "0w9UlywI5mI", "hVlMby1X_j8", "46UAt0w3F8c", 
-            "TX5gM4gLg9Y", "Lw8N8QvO7f4", "7rA7_1eT6lA", "9bZkp7q19f0", "dQw4w9WgXcQ",
-            "kJQP7kiw5Fk", "2Vv-BfVoq4g", "3tmd-ClpJxA", "VggbS99K3ls"
+            "TX5gM4gLg9Y", "Lw8N8QvO7f4", "7rA7_1eT6lA", "9bZkp7q19f0", "dQw4w9WgXcQ"
         ];
 
-        // Изначальная база
         let videoData = [
             { id: "eO_N8g0t7Z8", title: "ВЕНГЛАЛБИ VS ТАМАЕВ - СУДНЫЙ ДЕНЬ ФИНАЛ ШОУ", channel: "Венглалби", views: "9.2 млн", time: "12 часов назад", duration: "45:20", likes: 450000, hasLike: false },
             { id: "M6u0Yen9_sc", title: "ОТДАЛ ВСЕ СВОИ ДЕНЬГИ НА ПРЯТКИ! - КТО ПОСЛЕДНИЙ ВЫЙДЕТ", channel: "MrBeast", views: "94 млн", time: "3 дня назад", duration: "25:12", likes: 890000, hasLike: false },
@@ -319,11 +382,10 @@
         ];
 
         let commentsData = {};
-        let currentUser = null; // Данные профиля после регистрации
+        let currentUser = null;
         let player = null;
         let activeVideo = null;
 
-        // Элементы интерфейса
         const videoGrid = document.getElementById('videoGrid');
         const feedPage = document.getElementById('feedPage');
         const watchPage = document.getElementById('watchPage');
@@ -333,8 +395,7 @@
         const uploadModal = document.getElementById('uploadModal');
         const addVideoBtn = document.getElementById('addVideoBtn');
 
-        // Управление профилем и регистрацией
-        authBtn.onclick = () => authModal.style.display = 'flex';
+        authBtn.onclick = () => { authModal.style.display = 'flex'; };
         document.getElementById('closeAuth').onclick = () => authModal.style.display = 'none';
 
         document.getElementById('submitAuth').onclick = () => {
@@ -343,8 +404,6 @@
             if(!name) return showNotification("Введите ваше имя!");
 
             currentUser = { name, role, avatarLetter: name[0].toUpperCase() };
-
-            // Обновляем шапку приложения под профиль
             authBtn.style.display = "none";
             authModal.style.display = "none";
             
@@ -362,11 +421,9 @@
             document.getElementById('commentFieldAvatar').style.backgroundColor = role === 'admin' ? '#cc0000' : '#1c62b9';
 
             if(role === 'admin') addVideoBtn.style.display = "block";
-
-            showNotification(`Вы успешно вошли как: ${name} (${role === 'admin' ? 'Администратор' : 'Пользователь'})`);
+            showNotification(`Вы вошли как: ${name}`);
         };
 
-        // Инициализация плеера YouTube
         function onYouTubePlayerAPIReady() {
             player = new YT.Player('ytPlayer', {
                 height: '100%', width: '100%', videoId: videoData[0].id,
@@ -379,7 +436,6 @@
             setTimeout(() => { toast.classList.remove("show"); }, 3000);
         }
 
-        // Рендеринг ленты
         function renderFeed(videos) {
             videoGrid.innerHTML = '';
             videos.forEach((video) => {
@@ -404,7 +460,6 @@
             });
         }
 
-        // Открытие видео
         function openPlayer(video) {
             activeVideo = video;
             feedPage.style.display = 'none'; watchPage.style.display = 'flex';
@@ -423,36 +478,28 @@
             window.scrollTo(0, 0);
         }
 
-        // СИСТЕМА УМНОГО ГЛОБАЛЬНОГО ПОИСКА: Генерирует бесконечно любые видео!
         function executeSearch() {
             const rawQuery = document.getElementById('searchInput').value.trim();
             if(!rawQuery) return;
             
             const query = rawQuery.toLowerCase();
-            // Сначала ищем по локальной базе
             let filtered = videoData.filter(v => v.title.toLowerCase().includes(query) || v.channel.toLowerCase().includes(query));
             
-            // ЕСЛИ НЕТ В СПИСКЕ — СИСТЕМА АВТОМАТИЧЕСКИ ПАРСИТ ЗАПРОС И ДЕЛАЕТ ИЗ НЕГО НАСТОЯЩИЕ РОЛИКИ
             if(filtered.length === 0) {
-                showNotification(`Поиск на серверах YouTube по запросу "${rawQuery}"...`);
-                
-                // Генерируем 6 уникальных реалистичных роликов по запрошенной теме!
+                showNotification("Поиск на серверах...");
                 for(let i = 0; i < 6; i++) {
                     const randomId = RealYTPool[Math.floor(Math.random() * RealYTPool.length)];
-                    const fakeVideo = {
+                    videoData.unshift({
                         id: randomId,
-                        title: `${rawQuery.toUpperCase()} — Новый официальный выпуск [Эксклюзив 2026]`,
+                        title: `${rawQuery.toUpperCase()} — Официальное видео блогера`,
                         channel: rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1),
-                        views: `${Math.floor(Math.random() * 10) + 1}.${Math.floor(Math.random() * 9)} млн`,
-                        time: `${Math.floor(Math.random() * 6) + 1} дней назад`,
-                        duration: `${Math.floor(Math.random() * 30) + 10}:${Math.floor(Math.random() * 50) + 10}`,
-                        likes: Math.floor(Math.random() * 50000) + 5000,
+                        views: `${Math.floor(Math.random() * 5) + 1} млн`,
+                        time: `2 дня назад`,
+                        duration: `15:30`,
+                        likes: 45000,
                         hasLike: false
-                    };
-                    // Закидываем в общую базу, чтобы они не пропадали
-                    videoData.unshift(fakeVideo);
+                    });
                 }
-                // Фильтруем заново
                 filtered = videoData.filter(v => v.channel.toLowerCase().includes(query) || v.title.toLowerCase().includes(query));
             }
 
@@ -476,29 +523,19 @@
             renderFeed(videoData);
         }
 
-        // Система интерактивных лайков
         function updateLikeUI() {
             const btn = document.getElementById('likeBtn');
             document.getElementById('likeCount').innerText = activeVideo.likes >= 1000 ? `${(activeVideo.likes / 1000).toFixed(1)} тыс.` : activeVideo.likes;
-            if(activeVideo.hasLike) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
+            if(activeVideo.hasLike) btn.classList.add('active');
+            else btn.classList.remove('active');
         }
 
         document.getElementById('likeBtn').onclick = () => {
-            if(!activeVideo.hasLike) {
-                activeVideo.likes += 1;
-                activeVideo.hasLike = true;
-            } else {
-                activeVideo.likes -= 1;
-                activeVideo.hasLike = false;
-            }
+            if(!activeVideo.hasLike) { activeVideo.likes += 1; activeVideo.hasLike = true; }
+            else { activeVideo.likes -= 1; activeVideo.hasLike = false; }
             updateLikeUI();
         };
 
-        // Комментарии от лица зарегистрированного профиля
         const commentInput = document.getElementById('commentInput');
         const commentBtns = document.getElementById('commentBtns');
         commentInput.onfocus = () => commentBtns.style.display = 'flex';
@@ -508,7 +545,7 @@
             const text = commentInput.value.trim();
             if(!text) return;
 
-            const authorName = currentUser ? currentUser.name : "Анонимный Пользователь";
+            const authorName = currentUser ? currentUser.name : "Аноним";
             const avatarLet = currentUser ? currentUser.avatarLetter : "?";
             const isAdm = currentUser && currentUser.role === 'admin';
 
@@ -531,7 +568,7 @@
                 item.innerHTML = `
                     <div class="profile-pic" style="display:flex; background-color:${c.isAdmin ? '#cc0000' : '#1c62b9'}">${c.letter}</div>
                     <div>
-                        <p class="comment-author">${c.author} ${c.isAdmin ? '<b style="color:#cc0000; font-size:11px; margin-left:4px;">[АДМИН]</b>' : ''}</p>
+                        <p class="comment-author">${c.author} ${c.isAdmin ? '<b style="color:#cc0000; font-size:11px;">[АДМИН]</b>' : ''}</p>
                         <p class="comment-text">${c.text}</p>
                     </div>
                 `;
@@ -539,7 +576,6 @@
             });
         }
 
-        // Админка
         addVideoBtn.onclick = () => uploadModal.style.display = 'flex';
         document.getElementById('closeUpload').onclick = () => uploadModal.style.display = 'none';
         
@@ -553,7 +589,7 @@
             videoData.unshift({ id, title, channel, views: "100", time: "Только что", duration: "LIVE", likes: 12, hasLike: false });
             uploadModal.style.display = 'none';
             goHome();
-            showNotification('Видео успешно внедрено администратором!');
+            showNotification('Видео внедрено!');
         };
 
         document.getElementById('logoHome').onclick = (e) => { e.preventDefault(); goHome(); };
