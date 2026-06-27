@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Real Clone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Roboto", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f9f9f9;
+            color: #0f0f0f;
+            overflow-x: hidden;
+        }
+
+        /* --- ХЕДЕР --- */
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 56px;
+            background-color: #ffffff;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 16px; z-index: 100;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .header-left { display: flex; align-items: center; gap: 16px; }
+        .menu-icon { cursor: pointer; padding: 8px; border-radius: 50%; user-select: none; }
+        .menu-icon:hover { background-color: #e5e5e5; }
+        
+        .logo { display: flex; align-items: center; gap: 4px; cursor: pointer; text-decoration: none; color: inherit; }
+        .logo-icon { color: #ff0000; font-size: 30px !important; }
+        .logo span { font-weight: 700; font-size: 20px; letter-spacing: -0.5px; }
+
+        .header-center { display: flex; align-items: center; flex: 0 1 728px; gap: 16px; }
+        .search-form { display: flex; width: 100%; }
+        
+        .search-input {
+            width: 100%; height: 40px; padding: 0 16px; font-size: 16px;
+            border: 1px solid #ccc; border-right: none; border-radius: 40px 0 0 40px; outline: none;
+        }
+        .search-input:focus { border: 1px solid #1c62b9; }
+
+        .search-btn {
+            width: 64px; height: 40px; background-color: #f8f8f8;
+            border: 1px solid #ccc; border-radius: 0 40px 40px 0;
+            cursor: pointer; display: flex; justify-content: center; align-items: center;
+        }
+        .search-btn:hover { background-color: #f0f0f0; }
+
+        .mic-btn {
+            height: 40px; width: 40px; border-radius: 50%; border: none;
+            background-color: #f8f8f8; cursor: pointer; display: flex; justify-content: center; align-items: center;
+        }
+        .mic-btn:hover { background-color: #e5e5e5; }
+
+        .header-right { display: flex; align-items: center; gap: 8px; }
+        .icon-btn { background: none; border: none; padding: 8px; border-radius: 50%; cursor: pointer; }
+        .icon-btn:hover { background-color: #e5e5e5; }
+
+        .profile-pic {
+            width: 32px; height: 32px; border-radius: 50%; background-color: #007fff;
+            color: white; display: flex; justify-content: center; align-items: center;
+            font-weight: bold; cursor: pointer; margin-left: 8px; user-select: none;
+        }
+
+        /* --- ОСНОВНОЙ КОНТЕНТ --- */
+        .main-container { display: flex; margin-top: 56px; }
+
+        /* Боковая панель */
+        aside {
+            width: 240px; height: calc(100vh - 56px); position: fixed;
+            top: 56px; left: 0; background-color: #ffffff; padding: 12px 0;
+            overflow-y: auto; transition: width 0.15s ease-in-out; z-index: 90;
+        }
+        body.sidebar-collapsed aside { width: 72px; }
+
+        .sidebar-item {
+            display: flex; align-items: center; gap: 24px; padding: 0 24px;
+            height: 40px; cursor: pointer; text-decoration: none; color: #0f0f0f;
+        }
+        body.sidebar-collapsed .sidebar-item { flex-direction: column; justify-content: center; gap: 4px; padding: 0; height: 72px; }
+        .sidebar-item:hover, .sidebar-item.active { background-color: #f2f2f2; border-radius: 10px; margin: 0 8px; }
+        body.sidebar-collapsed .sidebar-item:hover, body.sidebar-collapsed .sidebar-item.active { margin: 0 4px; }
+        .sidebar-item span { font-size: 14px; white-space: nowrap; }
+        body.sidebar-collapsed .sidebar-item span { font-size: 10px; }
+
+        hr { border: none; border-top: 1px solid #e5e5e5; margin: 12px 0; }
+        body.sidebar-collapsed hr { display: none; }
+
+        main {
+            margin-left: 240px; flex: 1; padding: 24px;
+            background-color: #ffffff; transition: margin-left 0.15s ease-in-out;
+        }
+        body.sidebar-collapsed main { margin-left: 72px; }
+
+        /* --- ЛЕНТА ВИДЕО --- */
+        .video-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            column-gap: 16px; row-gap: 40px;
+        }
+        .video-card { cursor: pointer; display: flex; flex-direction: column; gap: 12px; }
+        
+        .thumbnail-container {
+            position: relative; width: 100%; padding-top: 56.25%;
+            border-radius: 12px; overflow: hidden; background-color: #e5e5e5;
+        }
+        .thumbnail-container img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; }
+        
+        .duration {
+            position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.8);
+            color: white; padding: 3px 4px; font-size: 12px; font-weight: 500; border-radius: 4px;
+        }
+
+        .video-info { display: flex; gap: 12px; }
+        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; flex-shrink: 0; }
+        .video-text { display: flex; flex-direction: column; gap: 4px; }
+        .video-title { font-size: 14px; font-weight: 500; line-height: 20px; color: #0f0f0f; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .channel-name { font-size: 12px; color: #606060; }
+        .video-metadata { font-size: 12px; color: #606060; }
+
+        /* --- СТРАНИЦА ПРОСМОТРА --- */
+        #watchPage { display: none; gap: 24px; padding-top: 12px; }
+        .player-container { flex: 1; max-width: 950px; }
+        
+        /* Контейнер, куда официальный API вставит плеер */
+        .yt-wrapper {
+            width: 100%; aspect-ratio: 16/9; background-color: #000;
+            border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        #ytPlayer { width: 100%; height: 100%; border: none; }
+
+        .watch-title { font-size: 20px; font-weight: 700; margin: 16px 0 8px 0; color: #0f0f0f; }
+        .watch-details { display: flex; justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid #e5e5e5; }
+        .watch-channel { display: flex; align-items: center; gap: 12px; }
+        
+        .subscribe-btn {
+            background-color: #0f0f0f; color: white; border: none;
+            padding: 0 16px; height: 36px; border-radius: 18px;
+            font-weight: 500; cursor: pointer; margin-left: 12px;
+        }
+        .subscribe-btn.subbed { background-color: #f2f2f2; color: #0f0f0f; }
+
+        /* --- ВНУТРЕННИЕ СНЭКБАРЫ --- */
+        .snackbar {
+            visibility: hidden; min-width: 280px; background-color: #212121; color: #fff;
+            border-radius: 4px; padding: 14px 24px; position: fixed; z-index: 200;
+            left: 24px; bottom: 24px; font-size: 14px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .snackbar.show { visibility: visible; animation: fadeIn 0.3s, fadeOut 0.3s 2.7s; }
+
+        @keyframes fadeIn { from { bottom: 0; opacity: 0; } to { bottom: 24px; opacity: 1; } }
+        @keyframes fadeOut { from { bottom: 24px; opacity: 1; } to { bottom: 0; opacity: 0; } }
+
+        /* --- МОДАЛЬНОЕ ОКНО --- */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); z-index: 150; justify-content: center; align-items: center;
+        }
+        .modal-content { background-color: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; }
+        .close-modal { position: absolute; top: 16px; right: 16px; cursor: pointer; }
+        .modal h3 { margin-bottom: 16px; }
+        .modal input { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; outline: none; }
+        .modal button { background-color: #0f0f0f; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
+
+        @media (max-width: 768px) {
+            aside { display: none; }
+            main { margin-left: 0 !important; }
+            #watchPage { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <i class="material-icons menu-icon" id="menuToggle">menu</i>
+            <a href="#" class="logo" id="logoHome">
+                <i class="material-icons logo-icon">play_circle_filled</i>
+                <span>YouTube</span>
+            </a>
+        </div>
+
+        <div class="header-center">
+            <form class="search-form" id="searchForm" onsubmit="event.preventDefault(); executeSearch();">
+                <input type="text" id="searchInput" class="search-input" placeholder="Введите название для поиска...">
+                <button type="submit" class="search-btn">
+                    <i class="material-icons">search</i>
+                </button>
+            </form>
+            <button class="mic-btn" id="micBtn"><i class="material-icons">mic</i></button>
+        </div>
+
+        <div class="header-right">
+            <button class="icon-btn" id="addVideoBtn" title="Добавить видео по ID"><i class="material-icons">video_call</i></button>
+            <button class="icon-btn" id="notifBtn"><i class="material-icons">notifications</i></button>
+            <div class="profile-pic" id="profileBtn">U</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside id="sidebar">
+            <a href="#" class="sidebar-item active" id="sideHome"><i class="material-icons">home</i><span>Главная</span></a>
+            <a href="#" class="sidebar-item" id="sideShorts"><i class="material-icons">explore</i><span>Shorts</span></a>
+            <a href="#" class="sidebar-item" id="sideSubs"><i class="material-icons">subscriptions</i><span>Подписки</span></a>
+            <hr>
+            <a href="#" class="sidebar-item" id="sideLib"><i class="material-icons">video_library</i><span>Библиотека</span></a>
+            <a href="#" class="sidebar-item" id="sideHistory"><i class="material-icons">history</i><span>История</span></a>
+        </aside>
+
+        <main>
+            <div id="feedPage">
+                <div class="video-grid" id="videoGrid"></div>
+            </div>
+
+            <div id="watchPage">
+                <div class="player-container">
+                    <div class="yt-wrapper">
+                        <div id="ytPlayer"></div>
+                    </div>
+                    
+                    <h2 class="watch-title" id="playerTitle">Название ролика</h2>
+                    <div class="watch-details">
+                        <div class="watch-channel">
+                            <div class="channel-avatar" id="playerAvatar"></div>
+                            <div>
+                                <p class="video-title" id="playerChannel" style="-webkit-line-clamp: 1; font-weight:bold;"></p>
+                                <p class="video-metadata" id="playerSubs">1.2 млн подписчиков</p>
+                            </div>
+                            <button class="subscribe-btn" id="subBtn">Вы подписаны</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast" class="snackbar">Сообщение</div>
+
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <i class="material-icons close-modal" id="closeUpload">close</i>
+            <h3>Вставьте ID видео с YouTube</h3>
+            <p style="font-size: 12px; color: #606060; margin-bottom: 12px;">Например, для ссылки youtube.com/watch?v=dQw4w9WgXcQ ID это: dQw4w9WgXcQ</p>
+            <input type="text" id="vTitle" placeholder="Придумайте название карточки" required>
+            <input type="text" id="vChannel" placeholder="Название канала" required>
+            <input type="text" id="vId" placeholder="YouTube Video ID (Обязательно)" required>
+            <button id="submitVideo">Добавить в ленту</button>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/player_api"></script>
+
+    <script>
+        // Список реальных популярных видео на YouTube с их настоящими ID
+        let videoData = [
+            { 
+                id: "dQw4w9WgXcQ", 
+                title: "Rick Astley - Never Gonna Give You Up (Official Music Video)", 
+                channel: "Rick Astley", 
+                views: "1.5 млрд", 
+                time: "14 лет назад", 
+                duration: "3:32"
+            },
+            { 
+                id: "9bZkp7q19f0", 
+                title: "PSY - GANGNAM STYLE(강남스타일) M/V", 
+                channel: "PSY", 
+                views: "5.1 млрд", 
+                time: "11 лет назад", 
+                duration: "4:12"
+            },
+            { 
+                id: "kJQP7kiw5Fk", 
+                title: "Luis Fonsi - Despacito ft. Daddy Yankee", 
+                channel: "Luis Fonsi", 
+                views: "8.4 млрд", 
+                time: "7 лет назад", 
+                duration: "4:41"
+            },
+            { 
+                id: "2Vv-BfVoq4g", 
+                title: "Ed Sheeran - Perfect (Official Music Video)", 
+                channel: "Ed Sheeran", 
+                views: "3.7 млрд", 
+                time: "6 лет назад", 
+                duration: "4:40"
+            }
+        ];
+
+        const videoGrid = document.getElementById('videoGrid');
+        const feedPage = document.getElementById('feedPage');
+        const watchPage = document.getElementById('watchPage');
+        const toast = document.getElementById('toast');
+        let player = null; // Глобальный объект для управления плеером
+
+        // Функция инициализации плеера, когда API загрузится
+        function onYouTubePlayerAPIReady() {
+            // Инициализируем пустой плеер с дефолтным видео
+            player = new YT.Player('ytPlayer', {
+                height: '100%',
+                width: '100%',
+                videoId: 'dQw4w9WgXcQ',
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 1,
+                    'rel': 0,
+                    'modestbranding': 1
+                }
+            });
+        }
+
+        // Кастомное уведомление
+        function showNotification(text) {
+            toast.innerText = text;
+            toast.classList.add("show");
+            setTimeout(() => { toast.classList.remove("show"); }, 3000);
+        }
+
+        // Рендеринг карточек. Картинки берутся напрямую с серверов картинок YouTube по ID ролика!
+        function renderFeed(videos) {
+            videoGrid.innerHTML = '';
+            if(videos.length === 0) {
+                videoGrid.innerHTML = '<p style="grid-column: 1/-1; text-align:center; color:#606060; padding-top:40px;">Ничего не найдено</p>';
+                return;
+            }
+            videos.forEach((video) => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                // Официальная ссылка на превью ролика от YouTube: hqdefault.jpg
+                const thumbUrl = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+                
+                card.innerHTML = `
+                    <div class="thumbnail-container">
+                        <img src="${thumbUrl}" alt="Превью">
+                        <div class="duration">${video.duration}</div>
+                    </div>
+                    <div class="video-info">
+                        <div class="channel-avatar" style="background: url('https://picsum.photos/40/40?sig=${video.id}') center/cover"></div>
+                        <div class="video-text">
+                            <p class="video-title">${video.title}</p>
+                            <p class="channel-name">${video.channel}</p>
+                            <p class="video-metadata">${video.views} просмотров • ${video.time}</p>
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => openPlayer(video);
+                videoGrid.appendChild(card);
+            });
+        }
+
+        // Переключение на страницу просмотра и загрузка видео через API
+        function openPlayer(video) {
+            feedPage.style.display = 'none';
+            watchPage.style.display = 'flex';
+            
+            document.getElementById('playerTitle').innerText = video.title;
+            document.getElementById('playerChannel').innerText = video.channel;
+            document.getElementById('playerAvatar').style.background = `url('https://picsum.photos/40/40?sig=${video.id}') center/cover`;
+            document.getElementById('playerSubs').innerText = `${Math.floor(Math.random() * 15) + 1} млн подписчиков`;
+
+            // Команда официальному плееру загрузить и включить новое видео по ID
+            if (player && typeof player.loadVideoById === 'function') {
+                player.loadVideoById(video.id);
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function goHome() {
+            if (player && typeof player.pauseVideo === 'function') {
+                player.pauseVideo();
+            }
+            watchPage.style.display = 'none';
+            feedPage.style.display = 'block';
+            renderFeed(videoData);
+        }
+
+        // Слушатели интерфейса
+        document.getElementById('logoHome').onclick = (e) => { e.preventDefault(); goHome(); };
+        document.getElementById('sideHome').onclick = (e) => { e.preventDefault(); goHome(); };
+        document.getElementById('menuToggle').onclick = () => document.body.classList.toggle('sidebar-collapsed');
+
+        document.getElementById('sideShorts').onclick = (e) => { e.preventDefault(); showNotification('Shorts загружаются...'); };
+        document.getElementById('sideSubs').onclick = (e) => { e.preventDefault(); showNotification('Подписки проверены'); };
+        document.getElementById('sideLib').onclick = (e) => { e.preventDefault(); showNotification('Ваша медиатека обновлена'); };
+        document.getElementById('sideHistory').onclick = (e) => { e.preventDefault(); showNotification('История активна'); };
+        document.getElementById('micBtn').onclick = () => showNotification('Микрофон слушает...');
+        document.getElementById('notifBtn').onclick = () => showNotification('Уведомлений нет');
+        document.getElementById('profileBtn').onclick = () => showNotification('Аккаунт подтвержден');
+
+        // Поиск по локальной базе названий
+        function executeSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = videoData.filter(v => v.title.toLowerCase().includes(query) || v.channel.toLowerCase().includes(query));
+            goHome();
+            renderFeed(filtered);
+        }
+
+        // Кнопка подписки
+        const subBtn = document.getElementById('subBtn');
+        subBtn.onclick = () => {
+            subBtn.classList.toggle('subbed');
+            if(subBtn.classList.contains('subbed')) {
+                subBtn.innerText = 'Подписаться';
+                showNotification('Вы отписались');
+            } else {
+                subBtn.innerText = 'Вы подписаны';
+                showNotification('Вы успешно подписались!');
+            }
+        };
+
+        // Модалка добавления видео по его настоящему YouTube ID
+        const modal = document.getElementById('uploadModal');
+        document.getElementById('addVideoBtn').onclick = () => modal.style.display = 'flex';
+        document.getElementById('closeUpload').onclick = () => modal.style.display = 'none';
+        
+        document.getElementById('submitVideo').onclick = () => {
+            const title = document.getElementById('vTitle').value;
+            const channel = document.getElementById('vChannel').value;
+            const id = document.getElementById('vId').value.trim();
+
+            if(!title || !channel || !id) {
+                showNotification('Пожалуйста, заполните все поля, включая ID ролика!');
+                return;
+            }
+
+            // Добавляем новое настоящее видео в начало списка
+            videoData.unshift({
+                id: id,
+                title: title,
+                channel: channel,
+                views: "1",
+                time: "Только что",
+                duration: "Потоковое"
+            });
+
+            modal.style.display = 'none';
+            document.getElementById('vTitle').value = '';
+            document.getElementById('vChannel').value = '';
+            document.getElementById('vId').value = '';
+            goHome();
+            showNotification('Настоящее видео добавлено в вашу ленту!');
+        };
+
+        // Стартовый рендеринг сетки
+        renderFeed(videoData);
+    </script>
+</body>
+</html>
