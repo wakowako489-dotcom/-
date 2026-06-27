@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Ultimate X - Анимированная версия</title>
+    <title>YouTube Ultimate X - Исправленный Плеер</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
@@ -100,27 +100,24 @@
         }
         body.sidebar-collapsed main { margin-left: 72px; }
 
-        /* --- ТЕГИ / КАТЕГОРИИ --- */
+        /* --- ТЕГИ --- */
         .tags-container { display: flex; gap: 12px; margin-bottom: 24px; overflow-x: auto; padding-bottom: 8px; }
         .tags-container::-webkit-scrollbar { height: 0px; }
         .tag { background-color: rgba(0,0,0,0.05); padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: background-color 0.2s ease, color 0.2s ease; }
         .tag:hover { background-color: rgba(0,0,0,0.1); }
         .tag.active { background-color: #0f0f0f; color: white; }
 
-        /* --- СЕТКА ВИДЕО КАРТОЧЕК --- */
+        /* --- СЕТКА ВИДЕО --- */
         .video-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             column-gap: 16px; row-gap: 40px;
         }
         .video-card { cursor: pointer; display: flex; flex-direction: column; gap: 12px; opacity: 0; animation: fadeInCard 0.4s ease forwards; }
         
-        /* Плавная задержка появления для эффекта каскада */
         .video-card:nth-child(1) { animation-delay: 0.05s; }
         .video-card:nth-child(2) { animation-delay: 0.1s; }
         .video-card:nth-child(3) { animation-delay: 0.15s; }
         .video-card:nth-child(4) { animation-delay: 0.2s; }
-        .video-card:nth-child(5) { animation-delay: 0.25s; }
-        .video-card:nth-child(6) { animation-delay: 0.3s; }
 
         .thumbnail-container {
             position: relative; width: 100%; padding-top: 56.25%;
@@ -134,11 +131,9 @@
         .duration {
             position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.8);
             color: white; padding: 3px 4px; font-size: 12px; font-weight: 500; border-radius: 4px;
-            transition: opacity 0.2s ease;
         }
         .video-info { display: flex; gap: 12px; }
-        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; flex-shrink: 0; transition: transform 0.2s ease; }
-        .video-card:hover .channel-avatar { transform: scale(1.05); }
+        .channel-avatar { width: 36px; height: 36px; border-radius: 50%; background-color: #ccc; flex-shrink: 0; }
         .video-text { display: flex; flex-direction: column; gap: 4px; }
         .video-title { font-size: 14px; font-weight: 500; line-height: 20px; color: #0f0f0f; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .channel-name { font-size: 12px; color: #606060; }
@@ -157,86 +152,59 @@
         .subscribe-btn:hover { background-color: #272727; }
         .subscribe-btn:active { transform: scale(0.95); }
         .subscribe-btn.subbed { background-color: #f2f2f2; color: #0f0f0f; }
-        .subscribe-btn.subbed:hover { background-color: #e5e5e5; }
 
         .actions-bar { display: flex; gap: 8px; align-items: center; }
         .like-dislike-group { display: flex; background-color: #f2f2f2; border-radius: 18px; overflow: hidden; }
         .action-btn { background: none; border: none; display: flex; align-items: center; gap: 6px; padding: 0 16px; height: 36px; cursor: pointer; font-size: 14px; font-weight: 500; user-select: none; transition: background-color 0.2s ease, color 0.2s ease; }
         .action-btn:hover { background-color: #e5e5e5; }
-        .action-btn.active { color: #ff0000; animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .action-btn.active { color: #ff0000; animation: popIn 0.3s ease; }
 
         /* --- КОММЕНТАРИИ --- */
         .comments-section { margin-top: 24px; }
         .comments-count { font-size: 16px; font-weight: bold; margin-bottom: 16px; }
         .comment-input-block { display: flex; gap: 12px; margin-bottom: 24px; }
         .comment-input-container { flex: 1; }
-        .comment-field { width: 100%; border: none; border-bottom: 1px solid #ccc; padding: 8px 0; outline: none; font-size: 14px; background: transparent; transition: border-color 0.2s ease; }
+        .comment-field { width: 100%; border: none; border-bottom: 1px solid #ccc; padding: 8px 0; outline: none; font-size: 14px; background: transparent; }
         .comment-field:focus { border-bottom: 2px solid #0f0f0f; }
         
         .comment-btns { display: none; justify-content: flex-end; gap: 8px; margin-top: 8px; animation: slideDown 0.2s ease; }
-        .comment-btn { border: none; padding: 8px 16px; border-radius: 18px; cursor: pointer; font-weight: 500; font-size: 14px; transition: background-color 0.2s ease; }
+        .comment-btn { border: none; padding: 8px 16px; border-radius: 18px; cursor: pointer; font-weight: 500; font-size: 14px; }
         .comment-btn.submit { background-color: #0f0f0f; color: white; }
-        .comment-btn.submit:hover { background-color: #272727; }
 
         .comments-list { display: flex; flex-direction: column; gap: 16px; }
         .comment-item { display: flex; gap: 12px; animation: fadeInCard 0.3s ease forwards; }
         .comment-author { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
         .comment-text { font-size: 14px; color: #0f0f0f; line-height: 20px; }
 
-        /* --- МОДАЛКИ И СНЭКБАРЫ --- */
+        /* --- МОДАЛКИ И ТОСТЫ --- */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.5); z-index: 150; justify-content: center; align-items: center;
-            backdrop-filter: blur(4px); transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
         }
         .modal-content { 
             background-color: white; padding: 24px; border-radius: 12px; width: 90%; max-width: 450px; position: relative; 
             animation: modalScaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        .close-modal { position: absolute; top: 16px; right: 16px; cursor: pointer; user-select: none; transition: transform 0.2s ease; }
-        .close-modal:hover { transform: rotate(90deg); }
+        .close-modal { position: absolute; top: 16px; right: 16px; cursor: pointer; }
+        .close-modal:hover { transform: rotate(90deg); transition: transform 0.2s ease; }
         .modal h3 { margin-bottom: 16px; }
-        .modal input, .modal select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; outline: none; font-size: 14px; background: white; }
-        .modal button { background-color: #0f0f0f; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-size: 14px; transition: background-color 0.2s ease; }
-        .modal button:hover { background-color: #272727; }
+        .modal input, .modal select { width: 100%; padding: 10px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; outline: none; }
+        .modal button { background-color: #0f0f0f; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
 
         .snackbar {
             visibility: hidden; min-width: 280px; background-color: #212121; color: #fff;
             border-radius: 8px; padding: 14px 24px; position: fixed; z-index: 200; left: 24px; bottom: 24px; font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
-        .snackbar.show { visibility: visible; animation: fadeInToast 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), fadeOutToast 0.3s 2.7s forwards; }
+        .snackbar.show { visibility: visible; animation: fadeInToast 0.3s ease, fadeOutToast 0.3s 2.7s forwards; }
 
-        /* --- КЛЮЧЕВЫЕ КАДРЫ АНИМАЦИЙ (KEYWORDS) --- */
-        @keyframes fadeInCard {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInPage {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes modalScaleUp {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.7); opacity: 0; }
-            80% { transform: scale(1.1); }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes fadeInToast {
-            from { bottom: 0; opacity: 0; transform: scale(0.9); }
-            to { bottom: 24px; opacity: 1; transform: scale(1); }
-        }
-        @keyframes fadeOutToast {
-            from { bottom: 24px; opacity: 1; transform: scale(1); }
-            to { bottom: 0; opacity: 0; transform: scale(0.9); }
-        }
+        @keyframes fadeInCard { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalScaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { 0% { transform: scale(0.8); } 100% { transform: scale(1); } }
+        @keyframes fadeInToast { from { bottom: 0; opacity: 0; } to { bottom: 24px; opacity: 1; } }
+        @keyframes fadeOutToast { from { bottom: 24px; opacity: 1; } to { bottom: 0; opacity: 0; } }
     </style>
 </head>
 <body>
@@ -252,7 +220,7 @@
 
         <div class="header-center">
             <form class="search-form" id="searchForm" onsubmit="event.preventDefault(); executeSearch();">
-                <input type="text" id="searchInput" class="search-input" placeholder="Введите имя любого блогера для плавной генерации...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Введите имя любого блогера для генерации видео...">
                 <button type="submit" class="search-btn">
                     <i class="material-icons">search</i>
                 </button>
@@ -262,7 +230,7 @@
         <div class="header-right">
             <button class="auth-btn" id="authBtn"><i class="material-icons">account_circle</i>Войти</button>
             <div class="role-badge" id="userRoleBadge">Роль</div>
-            <button class="icon-btn" id="addVideoBtn" style="display: none;" title="Добавить по ID (Админ)"><i class="material-icons">video_call</i></button>
+            <button class="icon-btn" id="addVideoBtn" style="display: none;" title="Добавить по ID"><i class="material-icons">video_call</i></button>
             <div class="profile-pic" id="headerProfilePic">U</div>
         </div>
     </header>
@@ -283,7 +251,6 @@
                 <div class="tag" onclick="filterTag('Тамаев')">Тамаев</div>
                 <div class="tag" onclick="filterTag('MrBeast')">MrBeast</div>
                 <div class="tag" onclick="filterTag('А4')">А4</div>
-                <div class="tag" onclick="filterTag('Глент')">Глент</div>
             </div>
 
             <div id="feedPage">
@@ -293,7 +260,7 @@
             <div id="watchPage">
                 <div class="player-container">
                     <div class="yt-wrapper">
-                        <div id="ytPlayer"></div>
+                        <iframe id="ytPlayer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </div>
                     
                     <h2 class="watch-title" id="playerTitle">Заголовок</h2>
@@ -325,7 +292,7 @@
                         <div class="comment-input-block">
                             <div class="profile-pic" id="commentFieldAvatar" style="display: flex;">?</div>
                             <div class="comment-input-container">
-                                <input type="text" class="comment-field" id="commentInput" placeholder="Оставьте свой комментарий...">
+                                <input type="text" class="comment-field" id="commentInput" placeholder="Оставьте комментарий...">
                                 <div class="comment-btns" id="commentBtns">
                                     <button class="comment-btn" id="cancelComment">Отмена</button>
                                     <button class="comment-btn submit" id="submitComment">Отправить</button>
@@ -342,48 +309,46 @@
     <div class="modal" id="authModal">
         <div class="modal-content">
             <i class="material-icons close-modal" id="closeAuth">close</i>
-            <h3>Регистрация / Вход в аккаунт</h3>
-            <input type="text" id="authName" placeholder="Ваше имя / никнейм" required>
+            <h3>Регистрация / Вход</h3>
+            <input type="text" id="authName" placeholder="Ваше имя" required>
             <select id="authRole">
-                <option value="user">Обычный Пользователь</option>
-                <option value="admin">Администратор (Добавление по ID)</option>
+                <option value="user">Пользователь</option>
+                <option value="admin">Администратор</option>
             </select>
-            <button id="submitAuth">Создать аккаунт</button>
+            <button id="submitAuth">Войти</button>
         </div>
     </div>
 
     <div class="modal" id="uploadModal">
         <div class="modal-content">
             <i class="material-icons close-modal" id="closeUpload">close</i>
-            <h3>Админ-Панель: Добавить видео в ленту</h3>
-            <input type="text" id="vTitle" placeholder="Заголовок видео" required>
-            <input type="text" id="vChannel" placeholder="Имя блогера" required>
-            <input type="text" id="vId" placeholder="YouTube Video ID" required>
-            <button id="submitVideo">Загрузить</button>
+            <h3>Добавить видео</h3>
+            <input type="text" id="vTitle" placeholder="Заголовок" required>
+            <input type="text" id="vChannel" placeholder="Блогер" required>
+            <input type="text" id="vId" placeholder="YouTube Video ID (например: dQw4w9WgXcQ)" required>
+            <button id="submitVideo">Добавить</button>
         </div>
     </div>
 
     <div id="toast" class="snackbar"></div>
 
-    <script src="https://www.youtube.com/player_api"></script>
-
     <script>
+        // Специальный пул гарантированно встраиваемых ID видео со всего мира
         const RealYTPool = [
-            "eO_N8g0t7Z8", "M6u0Yen9_sc", "0w9UlywI5mI", "hVlMby1X_j8", "46UAt0w3F8c", 
-            "TX5gM4gLg9Y", "Lw8N8QvO7f4", "7rA7_1eT6lA", "9bZkp7q19f0", "dQw4w9WgXcQ"
+            "dQw4w9WgXcQ", "kJQP7kiw5Fk", "9bZkp7q19f0", "2Vv-BfVoq4g", "7rA7_1eT6lA", 
+            "Lw8N8QvO7f4", "TX5gM4gLg9Y", "hVlMby1X_j8", "0w9UlywI5mI", "M6u0Yen9_sc"
         ];
 
         let videoData = [
-            { id: "eO_N8g0t7Z8", title: "ВЕНГЛАЛБИ VS ТАМАЕВ - СУДНЫЙ ДЕНЬ ФИНАЛ ШОУ", channel: "Венглалби", views: "9.2 млн", time: "12 часов назад", duration: "45:20", likes: 450000, hasLike: false },
             { id: "M6u0Yen9_sc", title: "ОТДАЛ ВСЕ СВОИ ДЕНЬГИ НА ПРЯТКИ! - КТО ПОСЛЕДНИЙ ВЫЙДЕТ", channel: "MrBeast", views: "94 млн", time: "3 дня назад", duration: "25:12", likes: 890000, hasLike: false },
             { id: "0w9UlywI5mI", title: "24 ЧАСА ГОВОРЮ ДА ВСЕМ КАПРИЗАМ ГЛЕНТА И КОМАНДЫ!", channel: "А4", views: "14 млн", time: "10 часов назад", duration: "20:05", likes: 310000, hasLike: false },
             { id: "hVlMby1X_j8", title: "Я ПОСТРОИЛ САМЫЙ ОПАСНЫЙ ЛАБИРИНТ ИЗ СТЕКЛА ДЛЯ А4", channel: "Глент", views: "5.1 млн", time: "1 день назад", duration: "16:30", likes: 120000, hasLike: false },
-            { id: "46UAt0w3F8c", title: "МОЯ НОВАЯ ЗАРЯЖЕННАЯ ТАЧКА ЗА 50,000,000 РУБЛЕЙ!", channel: "Тамаев", views: "4.8 млн", time: "2 дня назад", duration: "32:10", likes: 240000, hasLike: false }
+            { id: "dQw4w9WgXcQ", title: "ВЕНГЛАЛБИ VS ТАМАЕВ - СУДНЫЙ ДЕНЬ ФИНАЛ ШОУ", channel: "Венглалби", views: "9.2 млн", time: "12 часов назад", duration: "45:20", likes: 450000, hasLike: false },
+            { id: "kJQP7kiw5Fk", title: "МОЯ НОВАЯ ЗАРЯЖЕННАЯ ТАЧКА ЗА 50,000,000 РУБЛЕЙ!", channel: "Тамаев", views: "4.8 млн", time: "2 дня назад", duration: "32:10", likes: 240000, hasLike: false }
         ];
 
         let commentsData = {};
         let currentUser = null;
-        let player = null;
         let activeVideo = null;
 
         const videoGrid = document.getElementById('videoGrid');
@@ -401,7 +366,7 @@
         document.getElementById('submitAuth').onclick = () => {
             const name = document.getElementById('authName').value.trim();
             const role = document.getElementById('authRole').value;
-            if(!name) return showNotification("Введите ваше имя!");
+            if(!name) return showNotification("Введите имя!");
 
             currentUser = { name, role, avatarLetter: name[0].toUpperCase() };
             authBtn.style.display = "none";
@@ -415,21 +380,11 @@
             const profilePic = document.getElementById('headerProfilePic');
             profilePic.style.display = "flex";
             profilePic.innerText = currentUser.avatarLetter;
-            profilePic.style.backgroundColor = role === 'admin' ? '#cc0000' : '#1c62b9';
 
             document.getElementById('commentFieldAvatar').innerText = currentUser.avatarLetter;
-            document.getElementById('commentFieldAvatar').style.backgroundColor = role === 'admin' ? '#cc0000' : '#1c62b9';
-
             if(role === 'admin') addVideoBtn.style.display = "block";
-            showNotification(`Вы вошли как: ${name}`);
+            showNotification(`Привет, ${name}!`);
         };
-
-        function onYouTubePlayerAPIReady() {
-            player = new YT.Player('ytPlayer', {
-                height: '100%', width: '100%', videoId: videoData[0].id,
-                playerVars: { 'autoplay': 1, 'controls': 1, 'rel': 0, 'modestbranding': 1 }
-            });
-        }
 
         function showNotification(text) {
             toast.innerText = text; toast.classList.add("show");
@@ -444,7 +399,7 @@
                 card.innerHTML = `
                     <div class="thumbnail-container">
                         <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg" alt="Превью">
-                        <div class="duration">${video.duration || '12:40'}</div>
+                        <div class="duration">${video.duration || '10:15'}</div>
                     </div>
                     <div class="video-info">
                         <div class="channel-avatar" style="background: url('https://picsum.photos/40/40?sig=${video.id}') center/cover"></div>
@@ -467,11 +422,10 @@
             document.getElementById('playerTitle').innerText = video.title;
             document.getElementById('playerChannel').innerText = video.channel;
             document.getElementById('playerAvatar').style.background = `url('https://picsum.photos/40/40?sig=${video.id}') center/cover`;
-            document.getElementById('playerSubs').innerText = `${Math.floor(Math.random() * 30) + 5} млн подписчиков`;
 
-            if (player && typeof player.loadVideoById === 'function') {
-                player.loadVideoById(video.id);
-            }
+            // НАДЁЖНЫЙ ИСПРАВЛЕННЫЙ МЕТОД ЗАГРУЗКИ ПОТОКА ЧЕРЕЗ EMBED URL
+            const playerIframe = document.getElementById('ytPlayer');
+            playerIframe.src = `https://www.youtube.com/embed/${video.id}?autoplay=1&modestbranding=1&rel=0`;
             
             updateLikeUI();
             renderComments();
@@ -486,17 +440,17 @@
             let filtered = videoData.filter(v => v.title.toLowerCase().includes(query) || v.channel.toLowerCase().includes(query));
             
             if(filtered.length === 0) {
-                showNotification("Поиск на серверах...");
-                for(let i = 0; i < 6; i++) {
+                showNotification("Генерация видео из базы YouTube...");
+                for(let i = 0; i < 4; i++) {
                     const randomId = RealYTPool[Math.floor(Math.random() * RealYTPool.length)];
                     videoData.unshift({
                         id: randomId,
-                        title: `${rawQuery.toUpperCase()} — Официальное видео блогера`,
+                        title: `${rawQuery.toUpperCase()} — Свежий эксклюзивный контент!`,
                         channel: rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1),
-                        views: `${Math.floor(Math.random() * 5) + 1} млн`,
-                        time: `2 дня назад`,
-                        duration: `15:30`,
-                        likes: 45000,
+                        views: `${Math.floor(Math.random() * 3) + 1} млн`,
+                        time: `1 день назад`,
+                        duration: `12:45`,
+                        likes: 34000,
                         hasLike: false
                     });
                 }
@@ -518,7 +472,7 @@
         }
 
         function goHome() {
-            if (player && typeof player.pauseVideo === 'function') { player.pauseVideo(); }
+            document.getElementById('ytPlayer').src = ''; // Стопаем видео при выходе на главную
             watchPage.style.display = 'none'; feedPage.style.display = 'block';
             renderFeed(videoData);
         }
@@ -545,12 +499,11 @@
             const text = commentInput.value.trim();
             if(!text) return;
 
-            const authorName = currentUser ? currentUser.name : "Аноним";
+            const authorName = currentUser ? currentUser.name : "Пользователь";
             const avatarLet = currentUser ? currentUser.avatarLetter : "?";
-            const isAdm = currentUser && currentUser.role === 'admin';
 
             if(!commentsData[activeVideo.id]) commentsData[activeVideo.id] = [];
-            commentsData[activeVideo.id].unshift({ author: authorName, letter: avatarLet, text: text, isAdmin: isAdm });
+            commentsData[activeVideo.id].unshift({ author: authorName, letter: avatarLet, text: text });
 
             commentInput.value = '';
             renderComments();
@@ -566,9 +519,9 @@
                 const item = document.createElement('div');
                 item.className = 'comment-item';
                 item.innerHTML = `
-                    <div class="profile-pic" style="display:flex; background-color:${c.isAdmin ? '#cc0000' : '#1c62b9'}">${c.letter}</div>
+                    <div class="profile-pic" style="display:flex; background-color:#1c62b9;">${c.letter}</div>
                     <div>
-                        <p class="comment-author">${c.author} ${c.isAdmin ? '<b style="color:#cc0000; font-size:11px;">[АДМИН]</b>' : ''}</p>
+                        <p class="comment-author">${c.author}</p>
                         <p class="comment-text">${c.text}</p>
                     </div>
                 `;
@@ -586,10 +539,10 @@
 
             if(!title || !channel || !id) return showNotification('Заполните все поля!');
 
-            videoData.unshift({ id, title, channel, views: "100", time: "Только что", duration: "LIVE", likes: 12, hasLike: false });
+            videoData.unshift({ id, title, channel, views: "777", time: "Только что", duration: "NEW", likes: 55, hasLike: false });
             uploadModal.style.display = 'none';
             goHome();
-            showNotification('Видео внедрено!');
+            showNotification('Видео добавлено!');
         };
 
         document.getElementById('logoHome').onclick = (e) => { e.preventDefault(); goHome(); };
